@@ -292,11 +292,21 @@
     state.indicator.style.transform =
       "translate3d(" + activeButton.offsetLeft + "px, " + activeButton.offsetTop + "px, 0)";
 
-    activeButton.scrollIntoView({
-      behavior: prefersReducedMotion.matches ? "auto" : "smooth",
-      block: "nearest",
-      inline: "center"
-    });
+    // Horizontally center the active tab inside the rail without scrolling the document.
+    // Previously this used scrollIntoView, which walked up to the viewport and forced the
+    // page to jump into #pricing on initial mount.
+    const railEl = state.rail;
+    if (railEl && railEl.scrollWidth > railEl.clientWidth) {
+      const target = activeButton.offsetLeft + activeButton.offsetWidth / 2 - railEl.clientWidth / 2;
+      const maxScroll = railEl.scrollWidth - railEl.clientWidth;
+      const nextLeft = Math.max(0, Math.min(maxScroll, target));
+      if (Math.abs(railEl.scrollLeft - nextLeft) > 1) {
+        railEl.scrollTo({
+          left: nextLeft,
+          behavior: prefersReducedMotion.matches ? "auto" : "smooth"
+        });
+      }
+    }
   }
 
   function setActiveButton(state, brandName) {
