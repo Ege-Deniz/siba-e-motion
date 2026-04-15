@@ -23,3 +23,6 @@ Custom behavior is mounted as an isolated layer alongside the exported site — 
 ## Stack
 
 Vanilla JS and CSS — no framework, no build step, no dependencies.
+
+## Live Preview
+The live preview of this project is available at: https://siba-e-motion.vercel.app/
